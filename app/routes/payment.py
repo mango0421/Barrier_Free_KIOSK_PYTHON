@@ -6,12 +6,11 @@
 import uuid
 from flask import Blueprint, render_template, request
 
-bp = Blueprint("payment", __name__, url_prefix="/payment")
-
+payment_bp = Blueprint("payment", __name__, url_prefix="/payment")
 payments: list[dict] = []  # 메모리 결제 내역
 
 
-@bp.route("/", methods=["GET", "POST"])
+@payment_bp.route("/", methods=["GET", "POST"])
 def payment():
     if request.method == "POST":
         patient_id = request.form["patient_id"]
