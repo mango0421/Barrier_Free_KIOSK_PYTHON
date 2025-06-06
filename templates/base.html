@@ -8,26 +8,139 @@
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 <body class="font-{{ font_size }}">
-  <header class="fixed-header">
-    <button onclick="location.href='{{ url_for('home.set_font', size='small') }}'">가/</button>
-    <button onclick="location.href='{{ url_for('home.set_font', size='normal') }}'">가</button>
-    <button onclick="location.href='{{ url_for('home.set_font', size='large') }}'">가+</button>
+<header
+        class="fixed-header"
+        style="
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 5px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    "
+>
+  <button
+          onclick="location.href='{{ url_for('home.set_font', size='small') }}'"
+          style="
+        flex: 1;
+        min-width: 80px;
+        height: 60px;
+        font-size: 1.3rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+      "
+  >
+    가/
+  </button>
 
-    <button onclick="location.href='{{ url_for('home.switch_language') }}'">
-      {{ 'English' if session.get('lang') == 'ko' else '한국어' }}
-    </button>
+  <button
+          onclick="location.href='{{ url_for('home.set_font', size='normal') }}'"
+          style="
+        flex: 1;
+        min-width: 80px;
+        height: 60px;
+        font-size: 1.3rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+      "
+  >
+    가
+  </button>
 
-    <button id="tts-play" onclick="playTTS(document.title)">TTS</button>
+  <button
+          onclick="location.href='{{ url_for('home.set_font', size='large') }}'"
+          style="
+        flex: 1;
+        min-width: 80px;
+        height: 60px;
+        font-size: 1.3rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+      "
+  >
+    가+
+  </button>
 
-    <button onclick="location.href='{{ url_for('home.emergency') }}'">
-      <img src="{{ url_for('static', filename='images/emergency.png') }}" alt="Emergency" />
-    </button>
+  <button
+          onclick="location.href='{{ url_for('home.switch_language') }}'"
+          style="
+        flex: 1;
+        min-width: 80px;
+        height: 60px;
+        font-size: 1.3rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+      "
+  >
+    {{ 'English' if session.get('lang') == 'ko' else '한국어' }}
+  </button>
 
-    <button onclick="openMap()">지도</button>
-  </header>
+  <button
+          id="tts-play"
+          onclick="playTTS(document.title)"
+          style="
+        flex: 1;
+        min-width: 80px;
+        height: 60px;
+        font-size: 1.3rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+      "
+  >
+    TTS
+  </button>
 
-  <main>
-    {% block content %}{% endblock %}
-  </main>
+  <button
+          onclick="location.href='{{ url_for('home.emergency') }}'"
+          style="
+        flex: 1;
+        min-width: 80px;
+        height: 60px;
+        border: none;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+  >
+    <img
+            src="{{ url_for('static', filename='images/emergency.png') }}"
+            alt="Emergency"
+            style="width: 30px; height: auto;"
+    />
+  </button>
+
+  <button
+          onclick="openMap()"
+          style="
+        flex: 1;
+        min-width: 80px;
+        height: 60px;
+        font-size: 1.3rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+      "
+  >
+    지도
+  </button>
+</header>
+
+<main>
+  {% block content %}{% endblock %}
+</main>
 </body>
 </html>

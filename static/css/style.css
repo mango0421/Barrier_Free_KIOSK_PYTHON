@@ -1,34 +1,115 @@
-body.font-small { font-size: 14px; }
-body.font-normal { font-size: 18px; }
-body.font-large { font-size: 24px; }
+/* --------------------------------------------------------
+   RESET (필요 시 사용 – 중복 정의되면 지워도 무방)
+----------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+html, body {
+  height: 100%;
+  /* 시스템 글꼴 우선 + 한글 대응 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  "Helvetica Neue", Arial, "Noto Sans KR", "Apple SD Gothic Neo",
+  "Malgun Gothic", sans-serif;
+  background: #f4f7fa;
+  color: #222;
+}
+
+/* --------------------------------------------------------
+   GLOBAL FONT-SIZE SCALE  (★ 추가된 핵심 부분)
+----------------------------------------------------------- */
+body.font-small  { font-size: 14px; }   /* 전체 14 px 기준 */
+body.font-normal { font-size: 16px; }   /* 전체 16 px 기준 (기본) */
+body.font-large  { font-size: 20px; }   /* 전체 20 px 기준 */
+
+body.font-small  *,
+body.font-normal *,
+body.font-large  * {
+  /* 어떤 요소든 고정 px 로 지정돼 있더라도 부모 크기를 상속 */
+  font-size: inherit !important;
+}
+
+/* --------------------------------------------------------
+   레이아웃 공통
+----------------------------------------------------------- */
 .fixed-header {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
-  background: #f0f0f0;
-  padding: 8px;
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #d7e1ec;
   display: flex;
-  gap: 8px;
   align-items: center;
-  z-index: 100;
+  gap: 8px;
+  padding: 0 12px;
+  z-index: 1000;
 }
 
 main {
-  margin-top: 60px;
-  padding: 16px;
+  padding-top: 70px; /* 헤더 높이만큼 내려서 내용 가림 방지 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(100% - 70px);
 }
 
+/* --------------------------------------------------------
+   버튼 – 전체 공통
+----------------------------------------------------------- */
 button {
-  padding: 12px 20px;
-  font-size: inherit;
-  margin: 8px 0;
   cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-weight: 600;
+  background: #2b82f6;
+  color: #ffffff;
+  transition: background 0.15s ease;
+}
+button:hover      { background: #1f6fe0; }
+button:active     { background: #185ec2; }
+button:disabled   { opacity: 0.5; cursor: not-allowed; }
+
+header button img {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
 }
 
+/* --------------------------------------------------------
+   홈 화면(예시) 전용
+----------------------------------------------------------- */
 .home-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 28px;
+  margin-top: 40px;
 }
+
+.logo-and-title img {
+  width: 120px;
+  height: auto;
+}
+
+.button-group button {
+  width: 300px;
+  font-size: 1.4rem;
+}
+
+/* --------------------------------------------------------
+   유틸리티 (옵션)
+----------------------------------------------------------- */
+.text-center { text-align: center !important; }
+.mt-2  { margin-top:  0.5rem !important; }
+.mt-4  { margin-top:  1rem   !important; }
+.mb-2  { margin-bottom: 0.5rem !important; }
+.mb-4  { margin-bottom: 1rem   !important; }
+
+/* END OF FILE */
