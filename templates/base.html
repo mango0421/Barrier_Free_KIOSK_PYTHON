@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="{{ session.get('lang', 'ko') }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}보건소 키오스크{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body class="font-{{ font_size }}">
+  <header class="fixed-header">
+    <button onclick="location.href='{{ url_for('home.set_font', size='small') }}'">가/</button>
+    <button onclick="location.href='{{ url_for('home.set_font', size='normal') }}'">가</button>
+    <button onclick="location.href='{{ url_for('home.set_font', size='large') }}'">가+</button>
+
+    <button onclick="location.href='{{ url_for('home.switch_language') }}'">
+      {{ 'English' if session.get('lang') == 'ko' else '한국어' }}
+    </button>
+
+    <button id="tts-play" onclick="playTTS(document.title)">TTS</button>
+
+    <button onclick="location.href='{{ url_for('home.emergency') }}'">
+      <img src="{{ url_for('static', filename='images/emergency.png') }}" alt="Emergency" />
+    </button>
+
+    <button onclick="openMap()">지도</button>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
