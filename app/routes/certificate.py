@@ -6,12 +6,12 @@
 import uuid
 from flask import Blueprint, render_template, request
 
-bp = Blueprint("certificate", __name__, url_prefix="/certificate")
+certificate_bp = Blueprint("certificate", __name__, url_prefix="/certificate")
 
 issued_certs: list[dict] = []  # 간단한 메모리 저장소
 
 
-@bp.route("/", methods=["GET", "POST"])
+@certificate_bp.route("/", methods=["GET", "POST"])
 def certificate():
     if request.method == "POST":
         patient_id = request.form["patient_id"]
