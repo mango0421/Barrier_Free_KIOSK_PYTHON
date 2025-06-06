@@ -1,54 +1,49 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request, current_app as app
-import json, os
+"""
+홈 화면 & 공통 라우트
+"""
+from flask import Blueprint, render_template, session, redirect, request, url_for
+from app.utils.i18n import get_locale
 
-home_bp = Blueprint('home', __name__, template_folder='../../templates')
+home_bp = Blueprint("home", __name__)
 
-# ---------- locale util ----------
-def load_locale():
-    lang = session.get('lang', 'ko')
-    if lang == 'en':
-        with open(os.path.join(os.getcwd(), 'locale', 'en.json'), 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {}          # 한국어는 바로 템플릿에 기재
-
-# ---------- routes ----------
-@home_bp.route('/')
-@home_bp.route('/home')
-def home():
-    locale     = load_locale()
-    font_size  = session.get('font_size', 'normal')
-    audio_url  = url_for('static', filename='audio/audio_1_kor.mp3')  # ★ 추가
-    return render_template(
-        'home.html',
-        locale=locale,
-        font_size=font_size,
-        audio_url=audio_url        # ★ 템플릿으로 전달
+# ────────────────────────────────────────────────
+# 템플릿 전역 변수 — {{ font_size }} 로 사용
+# ────────────────────────────────────────────────
+@home_bp.context_processor
+def inject_globals():
+    lang = session.get("lang", "ko")
+    return dict(
+        font_size=session.get("font_size", "normal"),
+        lang=lang,
+        locale=get_locale(lang),        # ← locale dict 주입
     )
 
-@home_bp.route('/set-font/<size>')
-def set_font(size):
-    if size in ['small', 'normal', 'large']:
-        session['font_size'] = size
-    return redirect(url_for('home.home'))
+# ────────────────────────────────────────────────
+# 홈 화면
+# ────────────────────────────────────────────────
+@home_bp.route("/")
+def index():
+    return render_template("home.html")
 
-@home_bp.route('/switch-language')
+# ────────────────────────────────────────────────
+# 글꼴 크기 변경: /font/<size>
+# ────────────────────────────────────────────────
+@home_bp.route("/font/<size>")
+def set_font(size: str):
+    """
+    <size> : small | normal | large
+    """
+    if size in {"small", "normal", "large"}:
+        session["font_size"] = size
+    # 직전 페이지로 돌아가거나 없으면 홈으로
+    return redirect(request.referrer or url_for("home.index"))
+
+# ───── (선택) 언어 전환 · TTS · 긴급 호출 라우트 예시 ─────
+@home_bp.route("/switch-language")
 def switch_language():
-    session['lang'] = 'en' if session.get('lang', 'ko') == 'ko' else 'ko'
-    return redirect(url_for('home.home'))
+    session["lang"] = "en" if session.get("lang") == "ko" else "ko"
+    return redirect(request.referrer or url_for("home.index"))
 
-@home_bp.route('/tts')
-def tts():
-    text = request.args.get('text', '')
-    if not text:
-        return '', 204
-    from gtts import gTTS
-    import io
-    audio = io.BytesIO()
-    tts = gTTS(text=text, lang='en' if session.get('lang') == 'en' else 'ko')
-    tts.write_to_fp(audio)
-    audio.seek(0)
-    return app.response_class(audio, mimetype='audio/mp3')
-
-@home_bp.route('/emergency')
+@home_bp.route("/emergency")
 def emergency():
-    return "관리자에게 비상 알림을 보냈습니다.", 200
+    return render_template("emergency.html")
