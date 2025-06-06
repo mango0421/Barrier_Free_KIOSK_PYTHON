@@ -3,21 +3,27 @@ import json, os
 
 home_bp = Blueprint('home', __name__, template_folder='../../templates')
 
-# 영어 리소스를 로드하는 간단 함수
+# ---------- locale util ----------
 def load_locale():
-    lang = session.get('lang', 'ko')  # 기본값은 'ko'
+    lang = session.get('lang', 'ko')
     if lang == 'en':
         with open(os.path.join(os.getcwd(), 'locale', 'en.json'), 'r', encoding='utf-8') as f:
             return json.load(f)
-    else:
-        return {}  # 한국어는 템플릿에 직접 한글을 넣어두고, 영어 리소스만 분리
+    return {}          # 한국어는 바로 템플릿에 기재
 
+# ---------- routes ----------
 @home_bp.route('/')
 @home_bp.route('/home')
 def home():
-    locale = load_locale()
-    font_size = session.get('font_size', 'normal')  # 'normal', 'large', 'small'
-    return render_template('home.html', locale=locale, font_size=font_size)
+    locale     = load_locale()
+    font_size  = session.get('font_size', 'normal')
+    audio_url  = url_for('static', filename='audio/audio_1_kor.mp3')  # ★ 추가
+    return render_template(
+        'home.html',
+        locale=locale,
+        font_size=font_size,
+        audio_url=audio_url        # ★ 템플릿으로 전달
+    )
 
 @home_bp.route('/set-font/<size>')
 def set_font(size):
@@ -30,7 +36,6 @@ def switch_language():
     session['lang'] = 'en' if session.get('lang', 'ko') == 'ko' else 'ko'
     return redirect(url_for('home.home'))
 
-# TTS용 아주 간단한 예시 (텍스트를 mp3로 변환해 반환)
 @home_bp.route('/tts')
 def tts():
     text = request.args.get('text', '')
@@ -44,7 +49,6 @@ def tts():
     audio.seek(0)
     return app.response_class(audio, mimetype='audio/mp3')
 
-# 비상 버튼 클릭 시(간단히 알림만)
 @home_bp.route('/emergency')
 def emergency():
     return "관리자에게 비상 알림을 보냈습니다.", 200
