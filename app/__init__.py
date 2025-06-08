@@ -7,8 +7,8 @@ def create_app() -> Flask:
     """
     app = Flask(
         __name__,
-        static_folder="static",
-        template_folder="templates",
+        static_folder="../static",
+        template_folder="../templates",
     )
 
     # (선택) 세션 암호키 – 실제 서비스에서는 환경 변수로 관리 권장
@@ -21,10 +21,12 @@ def create_app() -> Flask:
     from app.routes.reception  import reception_bp
     from app.routes.certificate import certificate_bp
     from app.routes.payment    import payment_bp
+    from app.routes.chatbot    import chatbot_bp # Added chatbot blueprint import
 
     app.register_blueprint(home_bp)        # "/"
     app.register_blueprint(reception_bp)   # "/reception"
     app.register_blueprint(certificate_bp) # "/certificate"
     app.register_blueprint(payment_bp)     # "/payment"
+    app.register_blueprint(chatbot_bp)     # "/api/chatbot" (as per url_prefix in chatbot.py)
 
     return app

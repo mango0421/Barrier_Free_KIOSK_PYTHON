@@ -8,7 +8,7 @@
 <div class="home-container" style="display:flex; flex-direction:column; align-items:center; margin-top:50px;">
     <!-- 로고 + 제목 -->
     <div class="logo-and-title" style="display:flex; align-items:center; margin-bottom:30px;">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="보건소 로고"
+        <img src="{{ url_for('static', filename='images/CAU-health-icon.webp') }}" alt="CAU Health Icon"
              style="width:120px; height:auto; margin-right:20px;">
         <h1 style="font-size:2.5rem; margin:0;">{{ locale.get('home_title', '보건소에 오신 것을 환영합니다') }}</h1>
     </div>
@@ -23,6 +23,9 @@
         </button>
         <button onclick="location.href='{{ url_for('certificate.certificate') }}'" style="background-color:skyblue; color:white; font-size:1.5rem; padding:15px 40px; border:none; border-radius:8px; cursor:pointer; width:300px;">
             {{ locale.get('btn_certificate', '③ 증명서 발급') }}
+        </button>
+        <button onclick="location.href='{{ url_for('chatbot.chatbot_interface') }}'" style="background-color:skyblue; color:white; font-size:1.5rem; padding:15px 40px; border:none; border-radius:8px; cursor:pointer; width:300px;">
+            AI 챗봇 상담
         </button>
     </div>
 </div>
