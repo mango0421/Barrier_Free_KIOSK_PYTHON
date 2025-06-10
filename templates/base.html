@@ -9,6 +9,25 @@
     <!-- 정적 파일 -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <!-- 페이지 전용 간단 스타일 (팝업) -->
+    <style>
+        #emergencyPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.9);
+            color: #fff;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            z-index: 2000;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+    </style>
 </head>
 
 <!-- ★ 세션에 저장된 글꼴 크기(class) → body 에 적용 -->
@@ -17,9 +36,9 @@
 <!-- ───────────── 고정 헤더 ───────────── -->
 <header class="fixed-header">
     <!-- 글자 크기 버튼 3종 -->
-    <button onclick="location.href='{{ url_for('home.set_font', size='small') }}'">가/</button>
-    <button onclick="location.href='{{ url_for('home.set_font', size='normal') }}'">가</button>
-    <button onclick="location.href='{{ url_for('home.set_font', size='large') }}'">가+</button>
+    <button onclick="location.href='{{ url_for('home.set_font', size='small') }}'">글씨 작게</button>
+    <button onclick="location.href='{{ url_for('home.set_font', size='normal') }}'">글씨 조절</button>
+    <button onclick="location.href='{{ url_for('home.set_font', size='large') }}'">글씨 크게</button>
 
     <!-- 언어 전환 · TTS · 지도 등 기타 기능 -->
     <button onclick="location.href='{{ url_for('home.switch_language') }}'">
@@ -28,7 +47,8 @@
 
     <button id="tts-play" onclick="playTTS(document.title)">TTS</button>
 
-    <button onclick="location.href='{{ url_for('home.emergency') }}'">
+    <!-- Emergency 버튼: 팝업 표시 -->
+    <button onclick="showEmergencyPopup()">
         <img src="{{ url_for('static', filename='images/emergency.png') }}" alt="Emergency" style="width:24px;">
     </button>
 
@@ -40,6 +60,7 @@
     {% block content %}{% endblock %}
 </main>
 
+<!-- AI Chatbot floating button & modal (기존 코드 그대로) -->
 <button id="aiChatbotInvokeButton" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background-color: #007bff; color: white; font-size: 24px; border: none; cursor: pointer; z-index: 1000;">AI</button>
 
 <div id="aiChatbotModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1001; justify-content: center; align-items: center;">
@@ -56,6 +77,25 @@
     </div>
 </div>
 
+<!-- Emergency Popup Element -->
+<div id="emergencyPopup">
+    <span style="font-size:2rem;">🚨</span>&nbsp;응급상황&nbsp;<span style="font-size:2rem;">🚨</span><br>
+    상황실에 알람이 울립니다
+</div>
+
 {% block scripts %}{% endblock %}
+
+<!-- 페이지 전용 스크립트 -->
+<script>
+    // 5초 동안 팝업 표시 후 자동 숨김
+    function showEmergencyPopup() {
+        const popup = document.getElementById('emergencyPopup');
+        if (!popup) return;
+        popup.style.display = 'block';
+        setTimeout(() => {
+            popup.style.display = 'none';
+        }, 5000); // 5000ms = 5초
+    }
+</script>
 </body>
 </html>
