@@ -2,13 +2,13 @@
 import sys  # Added for logging
 from flask import Blueprint, render_template, request, session, redirect, url_for
 
-# Import service functions and SYMPTOMS list
+# 서비스 함수들과 증상 리스트를 불러 옵니다.
 from app.services.reception_service import (
     handle_scan_action,
     handle_manual_action,
     handle_choose_symptom_action,
-    SYMPTOMS,  # SYMPTOMS is imported for use in the template
-    update_reservation_status  # Added this import
+    SYMPTOMS,  #증상들은 템플릿에 올라온 내용을 바탕으로 진행합니다
+    update_reservation_status
 )
 
 reception_bp = Blueprint(
@@ -18,19 +18,11 @@ reception_bp = Blueprint(
     template_folder="../../templates",
 )
 
-# Note: Added url_prefix="/reception" for consistency if other blueprints have it.
-# Original did not have url_prefix for the blueprint itself, but relied on @reception_bp.route("/reception").
-# This change makes routes like /reception/ instead of just /reception.
-# If the old style /reception is required, the route below should be @reception_bp.route("/", methods=["GET", "POST"])
-# and the blueprint registration should be Blueprint('reception', __name__, template_folder='../../templates')
-
-# Definitions of BASE_DIR, RESV_CSV, SYMPTOMS, SYM_TO_DEPT, fake_scan_rrn,
-# lookup_reservation, new_ticket are removed as they are now in the service.
-
-
 @reception_bp.route("/", methods=["GET", "POST"])
-# Changed to "/" assuming url_prefix handles /reception
+# 파이썬 flask 프레임 워크 쓰기 - 서버 받아오는 등의 역할
 
+
+#reception 접수 할때 사용하는 함수
 def reception():
     _func_args = locals()
     _module_path = (
@@ -42,13 +34,13 @@ def reception():
         action = request.form.get("action")
 
         # 1) 주민등록증 인식 ---------------------------------------------------
-        #    STEP 1‑A : 안내 화면만 먼저 보여 주기
+        #    1)-1 : 안내 화면만 먼저 보여 주기
         if action == "scan":
             # 사용자가 '주민등록증 인식' 버튼을 누른 직후.
             # 실제 스캔을 수행하기 전에 안내 메시지를 띄운다.
             return render_template("reception.html", step="scan_prompt")
 
-        #    STEP 1‑B : '스캔 완료' 눌렀을 때 실제 스캔 로직 수행 (기존 코드 이동)
+        #    1)-2 : '스캔 완료' 눌렀을 때 실제 스캔 로직 수행 (기존 코드 이동)
         elif action == "scan_execute":
             scan_result = handle_scan_action()  # Service returns dict with name, rrn, reservation_details
             session["patient_name"] = scan_result["name"]
@@ -67,7 +59,7 @@ def reception():
                     doctor=details.get("doctor"),
                 )
             else:
-                # If no reservation, they proceed to symptom choice. Status will be updated there.
+                # 예약 내역이 없다면 증상을 선택하고 증상에 맞는 진료과를 추천해 줍니다.
                 return render_template(
                     "reception.html",
                     step="symptom",
@@ -76,7 +68,7 @@ def reception():
                     symptoms=SYMPTOMS,
                 )
 
-        # 2) 직접 입력 ---------------------------------------------------------
+        #
         elif action == "manual":
             name = request.form.get("name", "").strip()
             rrn = request.form.get("rrn", "").strip()

@@ -1,15 +1,10 @@
-"""
-홈 화면 & 공통 라우트
-"""
 import sys # Added for logging
 from flask import Blueprint, render_template, session, redirect, request, url_for
 from app.utils.i18n import get_locale
 
 home_bp = Blueprint("home", __name__)
 
-# ────────────────────────────────────────────────
-# 템플릿 전역 변수 — {{ font_size }} 로 사용
-# ────────────────────────────────────────────────
+
 @home_bp.context_processor
 def inject_globals():
     _func_args = locals()
@@ -32,9 +27,11 @@ def index():
     print(f"ENTERING: {_module_path}.index(args={{_func_args}})")
     return render_template("home.html")
 
+
 # ────────────────────────────────────────────────
 # 글꼴 크기 변경: /font/<size>
 # ────────────────────────────────────────────────
+
 @home_bp.route("/font/<size>")
 def set_font(size: str):
     """
