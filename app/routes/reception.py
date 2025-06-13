@@ -1,5 +1,5 @@
 # app/routes/reception.py - 접수 화면 입니다. /
-import sys  # Added for logging
+import sys  
 from flask import Blueprint, render_template, request, session, redirect, url_for
 
 # 서비스 함수들과 증상 리스트를 불러 옵니다.
@@ -78,16 +78,16 @@ def reception():
                     "reception.html",
                     step="input",
                     err="이름과 주민번호를 모두 입력하세요.",
-                )  # symptoms=SYMPTOMS might be needed if form is re-shown
+                )  
 
             session["patient_name"] = name
             session["patient_rrn"] = rrn
 
-            reservation_details = handle_manual_action(name, rrn)  # Service returns dict or None
+            reservation_details = handle_manual_action(name, rrn)  
 
             if reservation_details:
                 update_reservation_status(rrn, "Registered")
-                # Note: reservation_details is already the correct dictionary here
+                
                 return render_template(
                     "reception.html",
                     step="reserved",
@@ -110,21 +110,21 @@ def reception():
         elif action == "choose_symptom":
             symptom_key = request.form.get("symptom")
 
-            # Session safety‑net: 사용자가 이전 단계를 건너뛰었을 가능성 방지
+            
             if "patient_name" not in session or "patient_rrn" not in session:
-                # Redirect to initial step if patient info is missing
+                
                 return redirect(url_for("reception.reception"))
 
-            symptom_result = handle_choose_symptom_action(symptom_key)  # Returns dict with department, ticket
+            symptom_result = handle_choose_symptom_action(symptom_key)  
 
             session["department"] = symptom_result["department"]
             session["ticket"] = symptom_result["ticket"]
 
-            patient_rrn_from_session = session.get("patient_rrn")  # Get rrn from session
+            patient_rrn_from_session = session.get("patient_rrn")  
             if patient_rrn_from_session:
                 update_reservation_status(patient_rrn_from_session, "Registered")
 
-            # Pass patient name to the ticket step as well, if needed by template
+            
             patient_name = session.get("patient_name", "")
 
             return render_template(

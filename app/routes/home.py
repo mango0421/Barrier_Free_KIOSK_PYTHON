@@ -1,4 +1,4 @@
-import sys # Added for logging
+import sys 
 from flask import Blueprint, render_template, session, redirect, request, url_for
 from app.utils.i18n import get_locale
 
@@ -14,7 +14,7 @@ def inject_globals():
     return dict(
         font_size=session.get("font_size", "normal"),
         lang=lang,
-        locale=get_locale(lang),        # ← locale dict 주입
+        locale=get_locale(lang),        
     )
 
 # ────────────────────────────────────────────────
@@ -45,7 +45,7 @@ def set_font(size: str):
     # 직전 페이지로 돌아가거나 없으면 홈으로
     return redirect(request.referrer or url_for("home.index"))
 
-# ───── (선택) 언어 전환 · TTS · 긴급 호출 라우트 예시 ─────
+
 @home_bp.route("/switch-language")
 def switch_language():
     _func_args = locals()
